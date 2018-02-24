@@ -15,7 +15,7 @@
 ## import
 
 ```js
-import Promise from 'promise'
+import Promise from 'thin-promise'
 
 ```
 or
