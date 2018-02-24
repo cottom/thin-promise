@@ -1,4 +1,6 @@
 # Promise polyfill
+[![Build Status](https://travis-ci.org/jerry-i/thin-promise.svg?branch=master)](https://travis-ci.org/jerry-i/thin-promise)[![Coverage Status](https://coveralls.io/repos/github/jerry-i/thin-promise/badge.svg?branch=master)](https://coveralls.io/github/jerry-i/thin-promise?branch=master)
+
 
 ## API
 
