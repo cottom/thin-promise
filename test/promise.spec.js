@@ -234,21 +234,29 @@ describe('Promise.all', () => {
     }
   })
 
-  it('should resolve all', (done) => {
-    Promise.all([1, Promise.resolve(2), new Promise((resolve, reject) => setTimeout(() => resolve(3), 1000))]).then(res => {
-      console.log(res)
-      assert.deepEqual(res, [1, 2, 3])
-      done()
-    })
-  })
-
-  it('should reject', (done) => {
-    Promise.all([1, Promise.resolve(2), new Promise((r, reject) => reject(TEST_STRING), 1000), Promise.reject(TEST_STRING)])
-      .then(() => console.error(WONT_BE_HERE))
+  it('should reject all', (done) => {
+    Promise.all([
+      1,
+      Promise.resolve(2),
+      new Promise((r, reject) => reject(TEST_STRING), 1000),
+      Promise.reject(TEST_STRING)
+    ]).then(() => console.error(WONT_BE_HERE))
       .catch((s) => {
         assert.equal(TEST_STRING, s)
         done()
       })
+  })
+
+  it('should resolve all', (done) => {
+    Promise.all([
+      1,
+      Promise.resolve(2),
+      new Promise((resolve, reject) => setTimeout(() => resolve(3), 1000))
+    ]).then(res => {
+      console.log(res)
+      assert.deepEqual(res, [1, 2, 3])
+      done()
+    })
   })
 
 })
