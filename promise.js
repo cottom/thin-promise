@@ -38,7 +38,7 @@ Promise.all = function (array) {
   const result = []
   let rejected = false
   return new Promise((resolve, reject) => {
-    const shouldResolve = () => (++readyCount === allReadyCount) && resolve(result)
+    const shouldResolve = () => !rejected && (++readyCount === allReadyCount) && resolve(result)
     array.forEach((item, index) => {
       if (isThenable(item)) {
         item.then(val => {
