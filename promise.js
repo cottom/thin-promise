@@ -39,20 +39,18 @@ Promise.all = function (array) {
   let rejected = false
   return new Promise((resolve, reject) => {
     const shouldResolve = () => !rejected && (++readyCount === allReadyCount) && resolve(result)
-    array.forEach((item, index) => {
-      if (isThenable(item)) {
-        item.then(val => {
-          result[index] = val
-          shouldResolve()
-        }).catch(e => {
-          if (rejected) return
-          rejected = true
-          reject(e)
-        })
-      } else {
-        result[index] = item
+    array.map(item =>  {
+      if (!isThenable(item)) item = Promise.resolve(item)
+      return item
+    }).forEach((item, index) => {
+      item.then(val => {
+        result[index] = val
         shouldResolve()
-      }
+      }).catch(e => {
+        if (rejected) return
+        rejected = true
+        reject(e)
+      })
     })
   })
 }
@@ -137,3 +135,11 @@ Promise.prototype._run = function () {
 }
 
 export default Promise
+
+// Promise.all([
+//   1,
+//   Promise.resolve(2),
+//   new Promise((resolve, reject) => setTimeout(() => resolve(3), 1000))
+// ]).then(res => {
+//   console.log(res)
+// }).catch(e => console.log(e))

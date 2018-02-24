@@ -212,8 +212,10 @@ describe('Promise.prototype.finally(finallyFun)', () => {
       }, 1000)
     }).then((s) => {
       preLog = s
-    }).catch(() => {
+      return Promise.reject(s)
+    }).catch((s) => {
       assert.equal(preLog, TEST_STRING)
+      assert.equal(preLog, s)
       preLog = IN_CATCH
     }).finally(() => {
       assert.equal(preLog, IN_CATCH)
@@ -254,10 +256,9 @@ describe('Promise.all', () => {
       ThinPromise.resolve(2),
       new ThinPromise((resolve, reject) => setTimeout(() => resolve(3), 1000))
     ]).then(res => {
-      console.log(res)
       assert.deepEqual(res, [1, 2, 3])
       done()
-    })
+    }).catch()
   });
 
 })
