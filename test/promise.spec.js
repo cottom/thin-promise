@@ -1,6 +1,6 @@
 /* istanbul ignore next */
 
-const Promise = require('../dist/thin-promise.cjs.js')
+const ThinPromise = require('../dist/thin-promise.cjs.js')
 const assert = require('assert');
 const TEST_STRING = 'from future!'
 
@@ -10,7 +10,7 @@ const WONT_BE_HERE = 'won\'t be here!';
 describe('new Promise', () => {
   it('must has function arguments', () => {
     try {
-      new Promise()
+      new ThinPromise()
     } catch (e) {
       assert.equal(e.message,  'undefined is not a function!');
     }
@@ -18,30 +18,30 @@ describe('new Promise', () => {
 
   it('it should be call with new', () => {
     try {
-      Promise(r => r)
+      ThinPromise(r => r)
     } catch (e) {
       assert.equal(e.message, 'Promise must be called with new!');
     }
   })
 
   it('it should be normal call then new', () => {
-    const p = new Promise(() => {})
+    const p = new ThinPromise(() => {})
     assert.equal(p.state, 'pending')
 
-    const c = new Promise(r => r())
+    const c = new ThinPromise(r => r())
     assert.equal(c.state, 'fulfilled')
 
-    const j = new Promise((r, j) => j())
+    const j = new ThinPromise((r, j) => j())
     assert.equal(j.state, 'rejected')
   })
 
   it('it should only change state while pending', () => {
-    const p = new Promise((resolve, reject) => {
+    const p = new ThinPromise((resolve, reject) => {
       resolve()
       reject()
     })
     assert.equal(p.state, 'fulfilled')
-    assert.equal(new Promise((resolve, reject) => {
+    assert.equal(new ThinPromise((resolve, reject) => {
       reject()
       resolve()
     }).state, 'rejected')
@@ -51,7 +51,7 @@ describe('new Promise', () => {
 
 describe('Promise.prototype.then(onFulfilled, onRejected)', () => {
   it('it should be resolved', (done) => {
-    new Promise((resolve) => {
+    new ThinPromise((resolve) => {
       setTimeout(() => resolve(TEST_STRING), 1000)
     }).then(s => {
       assert.equal(s, TEST_STRING)
@@ -60,7 +60,7 @@ describe('Promise.prototype.then(onFulfilled, onRejected)', () => {
   })
 
   it('it should be reject', (done) => {
-    new Promise(resolve => resolve(Promise.reject(TEST_STRING))).then(() => {
+    new ThinPromise(resolve => resolve(ThinPromise.reject(TEST_STRING))).then(() => {
       console.error(WONT_BE_HERE)
     }, (s) => {
       assert.equal(s, TEST_STRING)
@@ -69,7 +69,7 @@ describe('Promise.prototype.then(onFulfilled, onRejected)', () => {
   })
 
   it('it should be another reject', (done) => {
-    new Promise((resolve, reject) => reject(TEST_STRING)).then(() => {
+    new ThinPromise((resolve, reject) => reject(TEST_STRING)).then(() => {
       console.error(WONT_BE_HERE)
     }, (s) => {
       assert.equal(s, TEST_STRING)
@@ -79,7 +79,7 @@ describe('Promise.prototype.then(onFulfilled, onRejected)', () => {
 
   it('it should be resolved without onFulfilled', (done) => {
 
-    const p = new Promise(resolve => {
+    const p = new ThinPromise(resolve => {
       setTimeout(() => resolve(TEST_STRING), 1000)
     }).then().then((s) => {
       assert.equal(s, TEST_STRING)
@@ -88,7 +88,7 @@ describe('Promise.prototype.then(onFulfilled, onRejected)', () => {
   })
 
   it('it should be reject without onRejected', (done) => {
-    new Promise((resolve, reject) => {
+    new ThinPromise((resolve, reject) => {
       setTimeout(() => reject(TEST_STRING), 100)
     }).then().then(() => {
       console.error(WONT_BE_HERE)
@@ -99,10 +99,10 @@ describe('Promise.prototype.then(onFulfilled, onRejected)', () => {
   })
 
   it('it should be resolved with another Promise', (done) => {
-    new Promise((resolve, reject) => {
+    new ThinPromise((resolve, reject) => {
       setTimeout(() => resolve(TEST_STRING), 100)
     }).then().then(s => {
-      return new Promise(resolve => {
+      return new ThinPromise(resolve => {
         setTimeout(() => resolve(s), 100)
       })
     }).then(s => {
@@ -111,11 +111,11 @@ describe('Promise.prototype.then(onFulfilled, onRejected)', () => {
     })
   })
 
-  it('it should reject with another Promise', (done) => {
-    new Promise((resolve, reject) => {
+  it('it should reject with another ThinPromise', (done) => {
+    new ThinPromise((resolve, reject) => {
       setTimeout(() => resolve(TEST_STRING), 100)
     }).then().then(s => {
-      return new Promise((resolve, reject) => {
+      return new ThinPromise((resolve, reject) => {
         setTimeout(() => reject(s), 100)
       })
     }).then(
@@ -131,7 +131,7 @@ describe('Promise.prototype.then(onFulfilled, onRejected)', () => {
 describe('Promise.prototype.catch(errorhandler)', (done) => {
 
   it('should catch up reject', (done) => {
-    new Promise((resolve, reject) => reject(TEST_STRING)).catch(s =>
+    new ThinPromise((resolve, reject) => reject(TEST_STRING)).catch(s =>
       {
         assert.equal(s, TEST_STRING)
         done()
@@ -139,7 +139,7 @@ describe('Promise.prototype.catch(errorhandler)', (done) => {
   })
 
   it('should catch up reject through before', (done) => {
-      new Promise((r, j) => j(TEST_STRING)).then()
+      new ThinPromise((r, j) => j(TEST_STRING)).then()
       .then(() => console.error(WONT_BE_HERE))
       .then()
       .catch(s => {
@@ -149,9 +149,9 @@ describe('Promise.prototype.catch(errorhandler)', (done) => {
   })
 
   it('should catch up rejection on the middle', (done) => {
-    new Promise((resolve, reject) => resolve(TEST_STRING))
+    new ThinPromise((resolve, reject) => resolve(TEST_STRING))
       .then(s => {
-        return new Promise((resolve, reject) => {
+        return new ThinPromise((resolve, reject) => {
           reject(s)
         })
       }).catch(s => {
@@ -161,7 +161,7 @@ describe('Promise.prototype.catch(errorhandler)', (done) => {
   })
 
   it('should catch up error in main context', done => {
-    new Promise(() => {
+    new ThinPromise(() => {
       throw Error(TEST_STRING)
     })
     .then()
@@ -172,7 +172,7 @@ describe('Promise.prototype.catch(errorhandler)', (done) => {
   })
 
   it('can\'t catch up error in if fulfilled', done => {
-    new Promise((r) => {
+    new ThinPromise((r) => {
       r(TEST_STRING)
       throw Error(TEST_STRING)
     })
@@ -188,7 +188,7 @@ describe('Promise.prototype.catch(errorhandler)', (done) => {
 
   it('should catch up error in onFulfilled', done => {
 
-    Promise.resolve(TEST_STRING)
+    ThinPromise.resolve(TEST_STRING)
     .then((s) => {
       throw Error(s)
     })
@@ -206,7 +206,7 @@ describe('Promise.prototype.finally(finallyFun)', () => {
   const AFTER_FINALLY = 'after finally'
   let preLog = null
   it('should log in order', () => {
-    new Promise((resolve, reject) => {
+    new ThinPromise((resolve, reject) => {
       setTimeout(() => {
         resolve(TEST_STRING)
       }, 1000)
@@ -228,35 +228,36 @@ describe('Promise.prototype.finally(finallyFun)', () => {
 describe('Promise.all', () => {
   it('should use Array as arguments', () => {
     try {
-      Promise.all(123)
+      ThinPromise.all(123)
     } catch (error) {
       assert.equal(error.message, 'arguments must be array')
     }
   })
 
   it('should reject all', (done) => {
-    Promise.all([
+    ThinPromise.all([
       1,
-      Promise.resolve(2),
-      new Promise((r, reject) => reject(TEST_STRING), 1000),
-      Promise.reject(TEST_STRING)
-    ]).then(() => console.error(WONT_BE_HERE))
+      ThinPromise.resolve(2),
+      new ThinPromise((r, reject) => reject(TEST_STRING), 1000),
+      ThinPromise.reject(TEST_STRING)
+    ])
+      .then(() => console.error(WONT_BE_HERE))
       .catch((s) => {
         assert.equal(TEST_STRING, s)
         done()
       })
-  })
+  });
 
   it('should resolve all', (done) => {
-    Promise.all([
+    ThinPromise.all([
       1,
-      Promise.resolve(2),
-      new Promise((resolve, reject) => setTimeout(() => resolve(3), 1000))
+      ThinPromise.resolve(2),
+      new ThinPromise((resolve, reject) => setTimeout(() => resolve(3), 1000))
     ]).then(res => {
       console.log(res)
       assert.deepEqual(res, [1, 2, 3])
       done()
     })
-  })
+  });
 
 })
