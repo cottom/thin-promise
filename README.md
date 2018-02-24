@@ -19,7 +19,7 @@ import Promise from 'promise'
 or
 
 ```html
-<script src="cdn-url"></script>
+<script src="https://unpkg.com/thin-promise"></script>
 window.Promise = ThinPromise
 ```
 
