@@ -1,0 +1,23 @@
+{
+  "moduleFileExtensions": [
+    "json",
+    "js"
+  ],
+  "testPathIgnorePatterns": [
+    "/node_modules/"
+  ],
+  "testRegex": ".*\\.(spec)\\.js$",
+  "collectCoverageFrom": [
+    "*.{js}"
+  ],
+  "transform": {
+  },
+  "coveragePathIgnorePatterns": [
+    "/node_modules/",
+    "/__test__/",
+    "browser.js"
+  ],
+  "collectCoverage": true,
+  "coverageDirectory": "__test__/.coverage",
+  "testEnvironment": "node"
+}
