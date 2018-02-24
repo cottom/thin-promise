@@ -1,10 +1,10 @@
 {
   "name": "thin-promise",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "./dist/thin-promise.cjs.js",
   "module": "./dist/thin-promise.es.js",
-  "browser": "./dist/thin-promise.browser.js",
+  "browser": "./dist/thin-promise.iife.js",
   "scripts": {
     "pretest": "npm run build",
     "test": "nyc --reporter=html --reporter=text mocha test/promise.spec.js",
@@ -13,8 +13,7 @@
     "prepublish": "npm run test"
   },
   "files": [
-    "dist",
-    "promise.js"
+    "dist"
   ],
   "nyc": {
     "exclude": [

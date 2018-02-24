@@ -21,8 +21,8 @@ or
 ```html
 <script src="cdn-url"></script>
 window.Promise = ThinPromise
-``
+```
 
 ## Example
 
-just see [test]()
+just see [test](https://github.com/jerry-i/thin-promise/blob/master/test/promise.spec.js)
