@@ -14,7 +14,6 @@ function Promise(fn) {
   this.state = states.PENDING
   this.value = null
   this._defers = []
-  this._finalFun = null
   try {
     fn(this._resolve.bind(this), this._reject.bind(this))
   } catch(e) {
