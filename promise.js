@@ -132,10 +132,6 @@ Promise.prototype._handle = function (defer) {
 Promise.prototype._run = function () {
   // in the real word, would use micro task not task
   setTimeout(() => {
-    // if (!this._defers.length && this.state === states.REJECTED) {
-    //   // throw Error('uncatch')
-    //   // console.warn('rejection not catch')
-    // }
     this._defers.forEach((defer) => this._handle(defer))
   })
 }
