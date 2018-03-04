@@ -114,9 +114,8 @@ Promise.prototype._handle = function (defer) {
     const isFulfilled = this.state === states.FULFILLED
     const callback = isFulfilled ? onFulfilled : onRejected
     if (!callback) {
-      // first new
-      onFinal && onFinal();
       setTimeout(function() {
+        onFinal && onFinal();
         (isFulfilled ? resolve : reject)(context.value)
       })
       return
