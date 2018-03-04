@@ -5,7 +5,8 @@ const plugins = []
 
 if (format === 'iife') plugins.push(uglify())
 export default {
-  input: 'index.js',
+  input: format === 'es' ? 'promise.es.js' : 'promise.js',
+  // input: 'promise.es.js',
   plugins: [...plugins],
   output: {
     file: `dist/thin-promise.${format}.js`,
