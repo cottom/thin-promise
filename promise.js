@@ -102,7 +102,6 @@ Promise.prototype._reject = function (val) {
   if (this.state !== states.PENDING) return
   this.state = states.REJECTED
   this.value = val
-  // console.log('call reject')
   this._run()
 }
 
@@ -110,36 +109,32 @@ Promise.prototype._handle = function (defer) {
   if (this.state === states.PENDING) {
     this._defers.push(defer)
   } else {
+    const context = this
     const { onFulfilled, onRejected, resolve, reject, onFinal } = defer
     const isFulfilled = this.state === states.FULFILLED
     const callback = isFulfilled ? onFulfilled : onRejected
     if (!callback) {
       // first new
       onFinal && onFinal();
-      (isFulfilled ? resolve : reject)(this.value)
+      setTimeout(function() {
+        (isFulfilled ? resolve : reject)(context.value)
+      })
       return
     }
-    try {
-      resolve(callback(this.value))
-    } catch(e) {
-      reject(e)
-    }
+    setTimeout(function() {
+      try {
+        resolve(callback(context.value))
+      } catch (e) {
+        reject(e)
+      }
+    })
+
   }
 }
 
 Promise.prototype._run = function () {
   // in the real word, would use micro task not task
-  setTimeout(() => {
-    this._defers.forEach((defer) => this._handle(defer))
-  })
+  this._defers.forEach((defer) => this._handle(defer))
 }
 
 export default Promise
-
-// Promise.all([
-//   1,
-//   Promise.resolve(2),
-//   new Promise((resolve, reject) => setTimeout(() => resolve(3), 1000))
-// ]).then(res => {
-//   console.log(res)
-// }).catch(e => console.log(e))
