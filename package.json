@@ -1,6 +1,6 @@
 {
   "name": "thin-promise",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "./dist/thin-promise.cjs.js",
   "module": "./dist/thin-promise.es.js",
