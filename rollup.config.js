@@ -5,7 +5,7 @@ const plugins = []
 
 if (format === 'iife') plugins.push(uglify())
 export default {
-  input: format !== 'iife' ? 'promise.es.js' : 'promise.js',
+  input: format === 'es' ? 'promise.es.js' : 'promise.js',
   // input: 'promise.es.js',
   plugins: [...plugins],
   output: {
